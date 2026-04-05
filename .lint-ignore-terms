@@ -1,9 +1,9 @@
-# .lint-ignore-terms — Terms bị bỏ qua trong lint check #4
-# Mỗi dòng là 1 term (case-insensitive regex)
-# Dùng cho: tên người, tên tổ chức, headings thường gặp, và các term
-# không cần tạo concept riêng
+# .lint-ignore-terms — Terms skipped in lint check #4
+# Each line is a term (case-insensitive regex)
+# Used for: names of people, organizations, common headings, and terms
+# that do not need their own concept file
 
-# ── Tên người / tổ chức ───────────────────────────────────────────────────────
+# ── People / Organizations ───────────────────────────────────────────────────
 Dario Amodei
 Paul Graham
 Andrej Karpathy
@@ -19,14 +19,14 @@ DeepMind
 Google
 Microsoft
 
-# ── Từ chỉ loại / nhóm (không phải concept cụ thể) ──────────────────────────
+# ── Category / Group Terms (Not specific concepts) ─────────────────────────
 Moderate
 Reflection
 Projection
 Forward focus
 Risk categories
 
-# ── Headings dạng bold trong summaries ───────────────────────────────────────
+# ── Common Bold Headings in Summaries ──────────────────────────────────────
 Executive Summary
 Key Insights
 Open Questions
@@ -34,13 +34,13 @@ See also
 Bridge Notes
 Concept seeds
 
-# ── Terms quá general ─────────────────────────────────────────────────────────
+# ── Overly General Terms ───────────────────────────────────────────────────
 emerge
 psychologically complex
 vague conceptual argument
 range of humanlike motivations
 
-# ── Multi-word phrases dạng kết hợp context ──────────────────────────────────
+# ── Contextual Multi-word Phrases ──────────────────────────────────────────
 Seizing Power
 Autonomy Risks
 Economic Disruption
