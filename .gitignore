@@ -1,0 +1,7 @@
+tools/.venv/
+.obsidian/
+*.pyc
+__pycache__/
+wiki/.scan-log
+wiki/.fileback-log
+.DS_Store

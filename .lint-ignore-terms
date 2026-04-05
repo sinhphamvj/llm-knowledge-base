@@ -1,0 +1,48 @@
+# .lint-ignore-terms — Terms bị bỏ qua trong lint check #4
+# Mỗi dòng là 1 term (case-insensitive regex)
+# Dùng cho: tên người, tên tổ chức, headings thường gặp, và các term
+# không cần tạo concept riêng
+
+# ── Tên người / tổ chức ───────────────────────────────────────────────────────
+Dario Amodei
+Paul Graham
+Andrej Karpathy
+Johanna Rothman
+Andy Jordan
+Marc Andreessen
+Brandon Swenson
+Boaz Barak
+Aaron Porter
+Anthropic
+OpenAI
+DeepMind
+Google
+Microsoft
+
+# ── Từ chỉ loại / nhóm (không phải concept cụ thể) ──────────────────────────
+Moderate
+Reflection
+Projection
+Forward focus
+Risk categories
+
+# ── Headings dạng bold trong summaries ───────────────────────────────────────
+Executive Summary
+Key Insights
+Open Questions
+See also
+Bridge Notes
+Concept seeds
+
+# ── Terms quá general ─────────────────────────────────────────────────────────
+emerge
+psychologically complex
+vague conceptual argument
+range of humanlike motivations
+
+# ── Multi-word phrases dạng kết hợp context ──────────────────────────────────
+Seizing Power
+Autonomy Risks
+Economic Disruption
+Indirect Effects
+Misuse for Destruction

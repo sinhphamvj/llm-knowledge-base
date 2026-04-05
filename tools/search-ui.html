@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiki Search</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: #f8f9fa; color: #1a1a2e; min-height: 100vh; }
+
+  header { background: #1a1a2e; color: white; padding: 16px 24px;
+           display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 18px; font-weight: 600; }
+  header span { opacity: 0.5; font-size: 13px; }
+
+  .search-bar { background: white; border-bottom: 1px solid #e5e7eb;
+                padding: 16px 24px; display: flex; gap: 10px; align-items: center; }
+  .search-bar input { flex: 1; padding: 10px 14px; border: 1.5px solid #d1d5db;
+                      border-radius: 8px; font-size: 15px; outline: none; }
+  .search-bar input:focus { border-color: #4a90d9; }
+  .search-bar select { padding: 10px 12px; border: 1.5px solid #d1d5db;
+                       border-radius: 8px; font-size: 14px; outline: none; background: white; }
+  .search-bar button { padding: 10px 20px; background: #4a90d9; color: white;
+                       border: none; border-radius: 8px; font-size: 14px;
+                       cursor: pointer; font-weight: 500; }
+  .search-bar button:hover { background: #357abd; }
+
+  .layout { display: flex; height: calc(100vh - 110px); }
+
+  .sidebar { width: 220px; background: white; border-right: 1px solid #e5e7eb;
+             padding: 16px; overflow-y: auto; flex-shrink: 0; }
+  .sidebar h3 { font-size: 11px; font-weight: 600; text-transform: uppercase;
+                letter-spacing: 0.05em; color: #6b7280; margin-bottom: 10px; }
+  .sidebar ul { list-style: none; }
+  .sidebar li { padding: 6px 8px; border-radius: 6px; font-size: 13px;
+                cursor: pointer; display: flex; justify-content: space-between; }
+  .sidebar li:hover { background: #f3f4f6; }
+  .sidebar li.active { background: #eff6ff; color: #3b82f6; font-weight: 500; }
+  .badge { background: #e5e7eb; color: #6b7280; border-radius: 10px;
+           padding: 1px 7px; font-size: 11px; }
+
+  .results { flex: 1; overflow-y: auto; padding: 20px 24px; }
+  .results-header { font-size: 13px; color: #6b7280; margin-bottom: 16px; }
+
+  .result-card { background: white; border: 1px solid #e5e7eb; border-radius: 10px;
+                 padding: 16px 20px; margin-bottom: 12px; cursor: pointer; transition: box-shadow 0.15s; }
+  .result-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-color: #4a90d9; }
+  .result-title { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 4px; }
+  .result-path { font-size: 12px; color: #9ca3af; margin-bottom: 8px; font-family: monospace; }
+  .result-snippet { font-size: 13px; color: #4b5563; line-height: 1.6; }
+  .result-snippet mark { background: #fef3c7; color: #92400e; padding: 1px 2px; border-radius: 2px; }
+  .result-tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { background: #eff6ff; color: #3b82f6; border-radius: 4px; padding: 2px 8px; font-size: 11px; }
+  .tag.domain { background: #f0fdf4; color: #16a34a; }
+
+  .empty { text-align: center; padding: 60px 20px; color: #9ca3af; }
+  .empty .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty p { font-size: 15px; }
+
+  .detail-panel { width: 400px; background: white; border-left: 1px solid #e5e7eb;
+                  padding: 20px; overflow-y: auto; flex-shrink: 0; display: none; }
+  .detail-panel.open { display: block; }
+  .detail-panel h2 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .detail-panel .meta { font-size: 12px; color: #6b7280; margin-bottom: 16px; font-family: monospace; }
+  .detail-panel pre { background: #f8f9fa; border-radius: 6px; padding: 14px;
+                      font-size: 12px; line-height: 1.7; overflow-x: auto;
+                      white-space: pre-wrap; word-break: break-word; }
+  .close-btn { float: right; background: none; border: none; font-size: 18px;
+               cursor: pointer; color: #9ca3af; padding: 0 0 8px 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧠 Wiki Search</h1>
+  <span id="wiki-stats">Loading...</span>
+</header>
+
+<div class="search-bar">
+  <input type="text" id="query" placeholder="Tìm kiếm trong wiki... (ví dụ: attention, alignment, product)" autofocus>
+  <select id="scope">
+    <option value="all">Tất cả</option>
+    <option value="concepts">Concepts</option>
+    <option value="topics">Topics</option>
+    <option value="summaries">Summaries</option>
+    <option value="domains">Domains</option>
+  </select>
+  <button onclick="search()">Tìm</button>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <h3>Domains</h3>
+    <ul id="domain-list"></ul>
+    <br>
+    <h3>Recent</h3>
+    <ul id="recent-list"></ul>
+  </div>
+
+  <div class="results" id="results">
+    <div class="empty">
+      <div class="icon">📚</div>
+      <p>Nhập từ khóa để tìm kiếm trong wiki</p>
+    </div>
+  </div>
+
+  <div class="detail-panel" id="detail-panel">
+    <button class="close-btn" onclick="closeDetail()">✕</button>
+    <h2 id="detail-title"></h2>
+    <div class="meta" id="detail-path"></div>
+    <pre id="detail-content"></pre>
+  </div>
+</div>
+
+<script>
+// Wiki index — loaded from server or embedded
+let wikiIndex = [];
+let recentSearches = JSON.parse(localStorage.getItem('wiki-recent') || '[]');
+
+// Load wiki index via fetch (works when served locally)
+async function loadIndex() {
+  try {
+    const resp = await fetch('/api/index');
+    wikiIndex = await resp.json();
+    document.getElementById('wiki-stats').textContent =
+      `${wikiIndex.length} files`;
+    buildSidebar();
+  } catch (e) {
+    // Fallback: static message
+    document.getElementById('wiki-stats').textContent = 'Run: python3 tools/serve.py';
+  }
+}
+
+function buildSidebar() {
+  const domains = {};
+  wikiIndex.forEach(f => {
+    const m = f.path.match(/wiki\/domains\/([^/]+)\.md/);
+    if (m && !m[1].startsWith('_')) {
+      domains[m[1]] = (domains[m[1]] || 0) + 1;
+    }
+    f.tags?.forEach(t => {
+      if (['ai','product','project','technology','psychology','systems-thinking'].includes(t)) {
+        domains[t] = (domains[t] || 0) + 1;
+      }
+    });
+  });
+
+  const domainList = document.getElementById('domain-list');
+  domainList.innerHTML = Object.entries(domains).map(([d,c]) =>
+    `<li onclick="filterDomain('${d}')">${d} <span class="badge">${c}</span></li>`
+  ).join('');
+
+  updateRecent();
+}
+
+function updateRecent() {
+  const recentList = document.getElementById('recent-list');
+  recentList.innerHTML = recentSearches.slice(0,5).map(q =>
+    `<li onclick="document.getElementById('query').value='${q}';search()">${q}</li>`
+  ).join('');
+}
+
+function filterDomain(domain) {
+  document.getElementById('query').value = domain;
+  document.getElementById('scope').value = 'all';
+  search();
+}
+
+function search() {
+  const query = document.getElementById('query').value.trim();
+  const scope = document.getElementById('scope').value;
+  if (!query) return;
+
+  // Save to recent
+  recentSearches = [query, ...recentSearches.filter(q => q !== query)].slice(0, 10);
+  localStorage.setItem('wiki-recent', JSON.stringify(recentSearches));
+  updateRecent();
+
+  const terms = query.toLowerCase().split(/\s+/);
+  let results = wikiIndex.filter(file => {
+    if (scope !== 'all' && !file.path.includes(`wiki/${scope}/`)) return false;
+    const text = (file.title + ' ' + file.content + ' ' + (file.tags||[]).join(' ')).toLowerCase();
+    return terms.every(t => text.includes(t));
+  });
+
+  // Score by relevance
+  results = results.map(f => {
+    let score = 0;
+    const titleLow = f.title?.toLowerCase() || '';
+    terms.forEach(t => {
+      if (titleLow.includes(t)) score += 10;
+      const content = f.content?.toLowerCase() || '';
+      score += (content.match(new RegExp(t, 'g')) || []).length;
+    });
+    return { ...f, score };
+  }).sort((a, b) => b.score - a.score);
+
+  renderResults(results, query);
+}
+
+function renderResults(results, query) {
+  const container = document.getElementById('results');
+  if (results.length === 0) {
+    container.innerHTML = `<div class="empty"><div class="icon">🔍</div><p>Không tìm thấy kết quả cho "<strong>${query}</strong>"</p></div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="results-header">${results.length} kết quả cho "<strong>${query}</strong>"</div>` +
+    results.map(f => {
+      const snippet = getSnippet(f.content, query);
+      const tags = (f.tags || []).slice(0, 4).map(t =>
+        `<span class="tag ${['ai','product','project','technology'].includes(t)?'domain':''}">${t}</span>`
+      ).join('');
+      return `
+        <div class="result-card" onclick="showDetail('${encodeURIComponent(JSON.stringify(f))}')">
+          <div class="result-title">${f.title || f.path.split('/').pop().replace('.md','')}</div>
+          <div class="result-path">${f.path}</div>
+          <div class="result-snippet">${snippet}</div>
+          <div class="result-tags">${tags}</div>
+        </div>`;
+    }).join('');
+}
+
+function getSnippet(content, query) {
+  if (!content) return '';
+  const terms = query.toLowerCase().split(/\s+/);
+  const idx = terms.reduce((best, t) => {
+    const i = content.toLowerCase().indexOf(t);
+    return (i >= 0 && (best === -1 || i < best)) ? i : best;
+  }, -1);
+
+  const start = Math.max(0, idx - 80);
+  const end = Math.min(content.length, idx + 200);
+  let snippet = content.slice(start, end);
+  if (start > 0) snippet = '...' + snippet;
+  if (end < content.length) snippet += '...';
+
+  // Highlight
+  terms.forEach(t => {
+    snippet = snippet.replace(new RegExp(`(${t})`, 'gi'), '<mark>$1</mark>');
+  });
+  return snippet;
+}
+
+function showDetail(encoded) {
+  const file = JSON.parse(decodeURIComponent(encoded));
+  document.getElementById('detail-title').textContent = file.title || file.path;
+  document.getElementById('detail-path').textContent = file.path;
+  document.getElementById('detail-content').textContent = file.content || '(empty)';
+  document.getElementById('detail-panel').classList.add('open');
+}
+
+function closeDetail() {
+  document.getElementById('detail-panel').classList.remove('open');
+}
+
+// Keyboard shortcut
+document.getElementById('query').addEventListener('keydown', e => {
+  if (e.key === 'Enter') search();
+  if (e.key === 'Escape') closeDetail();
+});
+
+loadIndex();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# Optional dependencies for advanced features
+# Run `python3 -m venv tools/.venv && source tools/.venv/bin/activate && pip install -r requirements.txt`
+
+# Used by tools/convert-docs.py (converting PDF, Office to Markdown)
+pymupdf4llm>=0.0.17
+markitdown>=0.0.1
+
+# Used by tools/chart.py (generating visualizations)
+matplotlib>=3.9.0
+networkx>=3.0
