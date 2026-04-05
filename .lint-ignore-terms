@@ -3,46 +3,33 @@
 # Used for: names of people, organizations, common headings, and terms
 # that do not need their own concept file
 
-# ── People / Organizations ───────────────────────────────────────────────────
-Dario Amodei
-Paul Graham
-Andrej Karpathy
-Johanna Rothman
-Andy Jordan
-Marc Andreessen
-Brandon Swenson
-Boaz Barak
-Aaron Porter
+# ── Well-known Organizations ─────────────────────────────────────────────────
 Anthropic
 OpenAI
 DeepMind
 Google
 Microsoft
+Meta
+Apple
+Amazon
+NVIDIA
 
-# ── Category / Group Terms (Not specific concepts) ─────────────────────────
-Moderate
-Reflection
-Projection
-Forward focus
-Risk categories
-
-# ── Common Bold Headings in Summaries ──────────────────────────────────────
+# ── Common Bold Headings in Summaries ────────────────────────────────────────
 Executive Summary
 Key Insights
 Open Questions
 See also
 Bridge Notes
 Concept seeds
+Key Takeaways
+Related Concepts
+Further Reading
 
-# ── Overly General Terms ───────────────────────────────────────────────────
-emerge
-psychologically complex
-vague conceptual argument
-range of humanlike motivations
-
-# ── Contextual Multi-word Phrases ──────────────────────────────────────────
-Seizing Power
-Autonomy Risks
-Economic Disruption
-Indirect Effects
-Misuse for Destruction
+# ── Overly General Terms (too broad to warrant a concept file) ───────────────
+Overview
+Introduction
+Background
+Conclusion
+Summary
+Example
+Use case
