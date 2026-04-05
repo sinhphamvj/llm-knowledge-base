@@ -59,6 +59,7 @@ Every time you receive `scan /raw` or `compile <file>`, perform **only these 3 C
    - Every summary must end with: a list of **key concepts** and **relations (links)**.
 5. Create/update file in `/wiki/summaries/<name>.md`
 6. Create/update **concept files** in `/wiki/concepts/`
+   - **Concept Limit**: Extract a strict maximum of **3-5 core concepts** per document to prevent concept explosion. Minor terms should be explained inline within the summary instead of getting their own files.
    - **Required**: every concept file must have `domain:` in its frontmatter
    - Domain value: the name of the domain MOC file (e.g. `ai`, `product`, `technology`, `project`)
    - If the concept belongs to a new domain with no MOC yet: use a short slug name — `lint` will detect it later
@@ -67,9 +68,9 @@ Every time you receive `scan /raw` or `compile <file>`, perform **only these 3 C
    - *If the domain has no MOC file yet*: check whether there are ≥10 concepts; if so, you must manually create a new MOC file following `wiki/domains/_about-domains.md`. From that point on the MOC will be auto-updated.
 
 ### Handling images (`/raw/images/`):
-- List images in the summary
-- If an image contains a diagram/chart: describe its content
-- Link with `![name](../../raw/images/name.png)` in the wiki
+- **Triage images before embedding**: Evaluate each image's value.
+  - **HIGH VALUE** (diagrams, flowcharts, architectures, data charts): Describe its content in detail and embed using `![name](../../raw/images/name.png)`.
+  - **LOW VALUE** (banners, avatars, decorative stock photos): Ignore completely. Do not describe and do not embed.
 
 ### Handling long documents
 

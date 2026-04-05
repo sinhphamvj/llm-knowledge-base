@@ -73,7 +73,7 @@ while IFS= read -r URL; do
   BASENAME=$(basename "$URL" | sed 's/[?#].*//')
   EXT="${BASENAME##*.}"
   [[ "$EXT" == "$BASENAME" || ${#EXT} -gt 5 ]] && EXT="png"
-  # Slug từ basename, giữ extension
+  # Slug from basename, keep extension
   SLUG=$(echo "${BASENAME%.*}" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9' '-' | sed 's/-*$//')
   FILENAME="${SLUG}.${EXT}"
   LOCAL_PATH="$IMG_DIR/$FILENAME"

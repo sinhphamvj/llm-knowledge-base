@@ -28,7 +28,7 @@ case "${1:-}" in
       rel="${f#$ROOT/}"
       [[ "$(basename "$f")" == "_template.md" ]] && continue
       if ! grep -qF "$rel" "$FB_LOG" 2>/dev/null; then
-        # Show preview — title nếu có
+        # Show preview — title if exists
         title=$(grep '^title:' "$f" 2>/dev/null | head -1 | sed 's/title: *//' | tr -d '"' || true)
         created=$(grep '^created:' "$f" 2>/dev/null | head -1 | sed 's/created: *//' || true)
         if [[ -n "$title" ]]; then
@@ -141,7 +141,7 @@ case "${1:-}" in
     fi
 
     pass=0; warn=0; skip=0
-    echo "   Wiki files được mention:"
+    echo "   Wiki files mentioned:"
     while IFS= read -r link; do
       # Strip path prefix if any (e.g. "concepts/foo" -> "foo")
       name="${link##*/}"
@@ -166,7 +166,7 @@ case "${1:-}" in
     echo "   Result: $pass updated ✅ | $warn needs review ⚠️ | $skip file(s) not yet created ⏳"
     if [[ $warn -gt 0 ]]; then
       echo "   → Files marked ⚠️ may not have been filed back"
-      echo "   → Kiểm tra và chạy: file-back: $target"
+      echo "   → Check and run: file-back: $target"
     fi
     echo ""
 

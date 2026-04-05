@@ -70,7 +70,7 @@ case "$MODE" in
     TARGET=$(find "$WIKI" -name "${QUERY}.md" -o -name "$QUERY" 2>/dev/null | head -1)
     if [[ -z "$TARGET" ]]; then echo "File not found: $QUERY"; exit 1; fi
     echo "=== LINKS FROM: $QUERY ==="
-    grep -oP '\[\[([^\]|#]+)' "$TARGET" | sed 's/\[\[//' | sort -u | while read -r link; do
+    grep -oE '\[\[([^]|#]+)' "$TARGET" | sed 's/\[\[//' | sort -u | while read -r link; do
       found=$(find "$WIKI" -name "${link}.md" 2>/dev/null | head -1)
       if [[ -n "$found" ]]; then
         echo "  ✓ $link  [${found#$ROOT/}]"

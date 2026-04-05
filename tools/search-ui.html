@@ -78,15 +78,15 @@
 </header>
 
 <div class="search-bar">
-  <input type="text" id="query" placeholder="Tìm kiếm trong wiki... (ví dụ: attention, alignment, product)" autofocus>
+  <input type="text" id="query" placeholder="Search wiki... (e.g., attention, alignment, product)" autofocus>
   <select id="scope">
-    <option value="all">Tất cả</option>
+    <option value="all">All</option>
     <option value="concepts">Concepts</option>
     <option value="topics">Topics</option>
     <option value="summaries">Summaries</option>
     <option value="domains">Domains</option>
   </select>
-  <button onclick="search()">Tìm</button>
+  <button onclick="search()">Search</button>
 </div>
 
 <div class="layout">
@@ -101,7 +101,7 @@
   <div class="results" id="results">
     <div class="empty">
       <div class="icon">📚</div>
-      <p>Nhập từ khóa để tìm kiếm trong wiki</p>
+      <p>Enter keywords to search the wiki</p>
     </div>
   </div>
 
@@ -202,11 +202,11 @@ function search() {
 function renderResults(results, query) {
   const container = document.getElementById('results');
   if (results.length === 0) {
-    container.innerHTML = `<div class="empty"><div class="icon">🔍</div><p>Không tìm thấy kết quả cho "<strong>${query}</strong>"</p></div>`;
+    container.innerHTML = `<div class="empty"><div class="icon">🔍</div><p>No results found for "<strong>${query}</strong>"</p></div>`;
     return;
   }
 
-  container.innerHTML = `<div class="results-header">${results.length} kết quả cho "<strong>${query}</strong>"</div>` +
+  container.innerHTML = `<div class="results-header">${results.length} results for "<strong>${query}</strong>"</div>` +
     results.map(f => {
       const snippet = getSnippet(f.content, query);
       const tags = (f.tags || []).slice(0, 4).map(t =>

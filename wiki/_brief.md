@@ -18,7 +18,6 @@ _Run `scan /raw` after adding content to populate this section._
 <!-- BUILD_INDEX:DOMAINS_START -->
 | Domain | MOC | Concepts | Summaries | Status |
 |--------|-----|----------|-----------|--------|
-| _(none yet)_ | - | 0 | - | ⚪ Awaiting content |
 <!-- BUILD_INDEX:DOMAINS_END -->
 
 ## Top Concepts
@@ -33,6 +32,7 @@ _Will be populated after compiling content._
 ## Key Insights
 
 <!-- BUILD_INDEX:INSIGHTS_START -->
+_Will be populated after compiling content._
 <!-- BUILD_INDEX:INSIGHTS_END -->
 
 ## Gaps

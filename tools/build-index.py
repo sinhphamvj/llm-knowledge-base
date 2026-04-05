@@ -99,7 +99,7 @@ def main():
     c_lines = ["| File | Domain | Description |", "|------|--------|-------------|"]
     for c in concepts:
         dom_display = DOMAINS_MAP.get(c['fm'].get('domain', 'unknown'), str(c['fm'].get('domain', 'unknown')).capitalize())
-        # Tự động xoá format như ngoặc nếu có
+        # Auto remove formatting like brackets if present
         dom_display = re.sub(r'[^\w\s/]', '', dom_display).strip()
         c_lines.append(f"| [[concepts/{c['slug']}]] | {dom_display} | {c['fm'].get('title', c['slug'])} |")
         
@@ -135,6 +135,75 @@ def main():
         f.write(index_text)
         
     print("Updated index.md")
+
+    # 2a. AUTO-CREATE DOMAIN SKELETONS (when ≥10 concepts, no MOC yet)
+    DOMAIN_THRESHOLD = 10
+    created_skeletons = []
+    for domain_slug, d_concepts in domain_concepts.items():
+        if domain_slug in ('meta', 'unknown'): continue
+        if len(d_concepts) < DOMAIN_THRESHOLD: continue
+        domain_file = os.path.join(DOMAINS_DIR, f"{domain_slug}.md")
+        if os.path.exists(domain_file): continue
+
+        # Collect summaries that reference this domain's concepts
+        concept_slugs = {c['slug'] for c in d_concepts}
+        related_summaries = []
+        for s in summaries:
+            spath = os.path.join(SUMMARIES_DIR, f"{s['slug']}.md")
+            try:
+                with open(spath, 'r', encoding='utf-8') as sf:
+                    scontent = sf.read()
+                if any(slug in scontent for slug in concept_slugs):
+                    title = s['fm'].get('title', s['slug'])
+                    related_summaries.append(f"- [[summaries/{s['slug']}]] — {title}")
+            except Exception:
+                pass
+
+        summaries_block = "\n".join(related_summaries) if related_summaries else "- _(none yet)_"
+        today = datetime.now().strftime("%Y-%m-%d")
+        # Title: short slugs (≤4 chars) → uppercase (e.g. "ai" → "AI"), else title-case
+        domain_title = domain_slug.upper() if len(domain_slug) <= 4 else domain_slug.replace('-', ' ').title()
+        skeleton = f"""---
+title: "Domain: {domain_title}"
+tags: [domain, {domain_slug}]
+created: {today}
+updated: {today}
+---
+
+# Domain: {domain_title}
+
+> Map of Content — entry point for knowledge about {domain_slug}.
+
+## Concepts
+
+<!-- BUILD_INDEX:CONCEPTS_START -->
+<!-- BUILD_INDEX:CONCEPTS_END -->
+
+## Topics
+
+| Topic | Description |
+|-------|-------------|
+| _(none yet)_ | |
+
+## Source Summaries
+
+{summaries_block}
+
+## Concept Seeds
+
+_(none yet)_
+
+## Related Domains
+
+_(none yet)_
+"""
+        with open(domain_file, 'w', encoding='utf-8') as f:
+            f.write(skeleton)
+
+        # Register in DOMAINS_MAP so the update loop picks it up
+        DOMAINS_MAP[domain_slug] = domain_title
+        created_skeletons.append(domain_slug)
+        print(f"  ✨ Auto-created domain skeleton: domains/{domain_slug}.md ({len(d_concepts)} concepts)")
 
     # 2. UPDATE DOMAIN MOCS
     for domain_slug in DOMAINS_MAP.keys():

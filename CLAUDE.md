@@ -51,7 +51,6 @@ index / brief                     # Rebuild index.md / _brief.md
 
 # Compile automation & verification
 ./tools/finalize-compile.sh <file> "insight" # Auto mark + rebuild index
-./tools/compile-check.sh "raw/articles/foo.md"  # verify all 9 steps (legacy)
 python3 ./tools/build-index.py               # Rebuild index.md & _brief.md manually
 
 # Fetch

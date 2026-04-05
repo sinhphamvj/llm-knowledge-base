@@ -14,35 +14,35 @@ style: |
   blockquote { border-left: 4px solid #4a90d9; color: #555; }
 ---
 
-# [Tiêu đề Slide Deck]
+# [Slide Deck Title]
 
-**[Chủ đề]**
-
----
-
-## Nội dung
-
-- Điểm 1
-- Điểm 2
-- Điểm 3
+**[Topic]**
 
 ---
 
-## Slide tiếp theo
+## Content
 
-> Quote hoặc key insight
-
-**Kết luận quan trọng**
+- Point 1
+- Point 2
+- Point 3
 
 ---
 
-## Tóm tắt
+## Next Slide
 
-| Khái niệm | Mô tả |
+> Quote or key insight
+
+**Key Takeaways**
+
+---
+
+## Summary
+
+| Concept | Description |
 |-----------|-------|
 | A | ... |
 | B | ... |
 
 ---
 
-*Generated từ wiki — xem chi tiết tại [[wiki/topics/...]]*
+*Generated from wiki — see details at [[wiki/topics/...]]*

@@ -1,6 +1,10 @@
 # LLM Knowledge Base System
 
 A personal, AI-powered knowledge base — built on **Andrej Karpathy**'s workflow.
+Created by **[Acy Doan](https://github.com/hoadoan1997)**.
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 Core idea: **The LLM reads, summarizes, and connects knowledge for you.** You just feed it sources, ask questions, and get back reports.
 
@@ -17,6 +21,46 @@ Core idea: **The LLM reads, summarizes, and connects knowledge for you.** You ju
 | Request a report | Generates report/slides from multiple sources |
 
 Once the wiki reaches ~50+ articles, the system starts surfacing **connections you hadn't noticed** across things you've already read.
+
+---
+
+## Getting Started
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/hoadoan1997/llm-knowledge-base.git
+cd llm-knowledge-base
+```
+
+### 2. Open in your AI coding tool
+
+Open this folder in **Claude Code**, **Cursor**, or **Windsurf**. The AI will auto-read `CLAUDE.md` → `AGENTS.md` and understand the full workflow.
+
+Then just start chatting:
+```
+scan /raw
+```
+
+### 3. (Optional) Install dependencies for PDF/Office conversion and charts
+
+The core workflow (scan → compile → query) requires **no dependencies** — just Bash and Python 3 (standard library).
+
+If you want to convert PDF/DOCX/PPTX files or generate charts, install the optional packages:
+
+```bash
+python3 -m venv tools/.venv
+source tools/.venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 4. (Optional) Open as an Obsidian vault
+
+For the best reading experience with graph view, backlinks, and Dataview queries:
+
+1. Install [Obsidian](https://obsidian.md)
+2. "Open folder as vault" → select this directory
+3. Install the **Obsidian Web Clipper** browser extension → set save location to `raw/articles/`
 
 ---
 
@@ -54,7 +98,6 @@ Once the wiki reaches ~50+ articles, the system starts surfacing **connections y
 └── tools/                  ← Workflow support scripts
     ├── convert-docs.py     ← Core script: converts PDF/DOCX/PPTX to MD
     ├── convert.sh          ← Wrapper: auto-converts all binary files in raw/
-    ├── compile-check.sh    ← Verifies all 9 compile steps completed
     ├── fetch-repo.sh       ← Fetches a GitHub repo into raw/repos/
     ├── file-back.sh        ← Tracks the feedback loop
     ├── impute.sh           ← Creates skeleton concept files for web-impute
@@ -304,13 +347,6 @@ Lint checks 9 sections: broken links, orphan files, missing frontmatter, domain 
 > **Noise reduction**: The "missing concepts" check uses smart filtering (ASCII ratio, word count, allow-list).
 > Add terms to `.lint-ignore-terms` (root) to exclude them from the check.
 
-### `compile-check.sh` — verify after compiling
-
-```bash
-./tools/compile-check.sh "raw/articles/foo.md"   # run after `scan /raw` or `compile`
-```
-
-Automatically checks all 9 compile steps: scan-log, images, summary, concepts, domain MOC, index, _brief, mark. Outputs a table with ✅/⚠️/❌.
 
 ### `impute.sh` — create skeleton concept files for web-impute
 

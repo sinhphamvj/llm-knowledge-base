@@ -5,3 +5,47 @@ __pycache__/
 wiki/.scan-log
 wiki/.fileback-log
 .DS_Store
+
+# Raw source material (copyrighted / personal — keep folder structure via .gitkeep)
+raw/articles/*
+raw/papers/*
+raw/repos/*
+raw/images/*
+!raw/articles/.gitkeep
+!raw/papers/.gitkeep
+!raw/repos/.gitkeep
+!raw/images/.gitkeep
+
+# Personal wiki content (keep folder structure via .gitkeep)
+# Example files are explicitly unignored below
+wiki/summaries/*
+wiki/concepts/*
+wiki/topics/*
+!wiki/summaries/.gitkeep
+!wiki/concepts/.gitkeep
+!wiki/topics/.gitkeep
+
+# Personal domain MOCs (keep the template/about file and example)
+wiki/domains/*.md
+!wiki/domains/_about-domains.md
+
+# Example files — included to demonstrate wiki format
+!wiki/concepts/transformer-architecture.md
+!wiki/summaries/attention-is-all-you-need.md
+!wiki/domains/ai.md
+
+# Personal outputs (keep folder structure and templates)
+outputs/reports/*
+outputs/notes/*
+outputs/charts/*
+!outputs/reports/.gitkeep
+!outputs/notes/.gitkeep
+!outputs/charts/.gitkeep
+
+# Environment variables (API keys, secrets)
+.env
+.env.*
+*.env
+
+# Local Claude Code config (contains machine-specific paths)
+.claude/

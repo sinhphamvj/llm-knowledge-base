@@ -105,7 +105,7 @@ run_checks() {
       fi
     done < <(grep -oE '\*\*[^*]{4,60}\*\*' "$f" 2>/dev/null | sed 's/\*\*//g' | while IFS= read -r term; do
       # Pre-filter: original term must be ≥60% ASCII printable chars
-      # This catches Vietnamese mixed-Latin text like "stakes cao hơn" → mostly non-ASCII
+      # This catches mixed-Latin text (e.g. non-ASCII languages) → mostly non-ASCII
       total_chars=$(echo -n "$term" | wc -c | tr -d ' ')
       ascii_chars=$(echo -n "$term" | tr -cd '[:print:]' | tr -cd 'a-zA-Z0-9 ._-' | wc -c | tr -d ' ')
       if [[ $total_chars -gt 0 ]]; then

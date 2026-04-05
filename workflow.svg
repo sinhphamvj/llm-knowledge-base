@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 600" width="760" height="600"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 845" width="760" height="845"
      font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
 
   <!-- Background -->
-  <rect width="760" height="600" fill="#FAFAFA" rx="10"/>
+  <rect width="760" height="845" fill="#FAFAFA" rx="10"/>
 
   <!-- Arrowhead defs -->
   <defs>
@@ -19,52 +19,43 @@
 
   <!-- Title -->
   <text x="380" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="#212121">LLM Knowledge Base — Workflow</text>
-  <text x="380" y="46" text-anchor="middle" font-size="9" fill="#9E9E9E">dựa trên workflow của Andrej Karpathy</text>
+  <text x="380" y="46" text-anchor="middle" font-size="9" fill="#616161">by <tspan font-weight="bold">Acy Doan</tspan> (based on Andrej Karpathy's workflow)</text>
 
   <!-- ═══ ROW 1: Sources ═══ -->
-  <!-- Web Article (center x=132) -->
   <rect x="55"  y="58" width="155" height="46" rx="7" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1.5"/>
   <text x="132" y="78"  text-anchor="middle" font-size="11" font-weight="600" fill="#0D47A1">Web Article</text>
   <text x="132" y="94"  text-anchor="middle" font-size="9"  fill="#1565C0">HTML / Markdown</text>
 
-  <!-- GitHub Repo (center x=297) -->
   <rect x="220" y="58" width="155" height="46" rx="7" fill="#E8EAF6" stroke="#9FA8DA" stroke-width="1.5"/>
   <text x="297" y="78"  text-anchor="middle" font-size="11" font-weight="600" fill="#1A237E">GitHub Repo</text>
   <text x="297" y="94"  text-anchor="middle" font-size="9"  fill="#283593">public / private</text>
 
-  <!-- PDF / Paper (center x=462) -->
   <rect x="385" y="58" width="155" height="46" rx="7" fill="#FCE4EC" stroke="#F48FB1" stroke-width="1.5"/>
   <text x="462" y="78"  text-anchor="middle" font-size="11" font-weight="600" fill="#880E4F">PDF / Paper</text>
   <text x="462" y="94"  text-anchor="middle" font-size="9"  fill="#AD1457">arxiv, research, docs</text>
 
-  <!-- Image / Chart (center x=627) -->
   <rect x="550" y="58" width="155" height="46" rx="7" fill="#F3E5F5" stroke="#CE93D8" stroke-width="1.5"/>
   <text x="627" y="78"  text-anchor="middle" font-size="11" font-weight="600" fill="#4A148C">Image / Chart</text>
   <text x="627" y="94"  text-anchor="middle" font-size="9"  fill="#7B1FA2">PNG, JPG, SVG</text>
 
-  <!-- Arrows Source → Tool -->
   <line x1="132" y1="104" x2="132" y2="122" stroke="#9E9E9E" stroke-width="1.5" marker-end="url(#ah)"/>
   <line x1="297" y1="104" x2="297" y2="122" stroke="#9E9E9E" stroke-width="1.5" marker-end="url(#ah)"/>
   <line x1="462" y1="104" x2="462" y2="122" stroke="#9E9E9E" stroke-width="1.5" marker-end="url(#ah)"/>
   <line x1="627" y1="104" x2="627" y2="122" stroke="#9E9E9E" stroke-width="1.5" marker-end="url(#ah)"/>
 
   <!-- ═══ ROW 2: Ingestion Tools ═══ -->
-  <!-- Obsidian Web Clipper -->
   <rect x="55"  y="124" width="155" height="38" rx="6" fill="#BBDEFB" stroke="#64B5F6" stroke-width="1"/>
   <text x="132" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="#0D47A1">Obsidian Web Clipper</text>
   <text x="132" y="154" text-anchor="middle" font-size="9"  fill="#1565C0">→ raw/articles/</text>
 
-  <!-- fetch-repo.sh -->
   <rect x="220" y="124" width="155" height="38" rx="6" fill="#C5CAE9" stroke="#7986CB" stroke-width="1"/>
   <text x="297" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="#1A237E">fetch-repo.sh</text>
   <text x="297" y="154" text-anchor="middle" font-size="9"  fill="#283593">→ raw/repos/</text>
 
-  <!-- curl / download -->
   <rect x="385" y="124" width="155" height="38" rx="6" fill="#F8BBD0" stroke="#F06292" stroke-width="1"/>
   <text x="462" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="#880E4F">curl / download</text>
   <text x="462" y="154" text-anchor="middle" font-size="9"  fill="#AD1457">→ raw/papers/</text>
 
-  <!-- save-image.sh -->
   <rect x="550" y="124" width="155" height="38" rx="6" fill="#E1BEE7" stroke="#BA68C8" stroke-width="1"/>
   <text x="627" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="#4A148C">save-image.sh</text>
   <text x="627" y="154" text-anchor="middle" font-size="9"  fill="#6A1B9A">→ raw/images/</text>
@@ -74,66 +65,118 @@
   <line x1="297" y1="162" x2="297" y2="190" stroke="#BDBDBD" stroke-width="1.5"/>
   <line x1="462" y1="162" x2="462" y2="190" stroke="#BDBDBD" stroke-width="1.5"/>
   <line x1="627" y1="162" x2="627" y2="190" stroke="#BDBDBD" stroke-width="1.5"/>
-  <!-- Horizontal merge line -->
   <line x1="132" y1="190" x2="627" y2="190" stroke="#BDBDBD" stroke-width="1.5"/>
-  <!-- Arrow down to raw/ -->
   <line x1="380" y1="190" x2="380" y2="210" stroke="#9E9E9E" stroke-width="2" marker-end="url(#ah)"/>
 
   <!-- ═══ ROW 3: raw/ Inbox ═══ -->
   <rect x="230" y="212" width="300" height="46" rx="8" fill="#FFF9C4" stroke="#F9A825" stroke-width="2"/>
   <text x="380" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#E65100">📥  raw/  —  Inbox</text>
   <text x="380" y="249" text-anchor="middle" font-size="9"  fill="#F57F17">articles/  ·  repos/  ·  papers/  ·  images/</text>
+  
+  <!-- Arrow raw/ -> scan/compile -->
+  <line x1="380" y1="258" x2="380" y2="280" stroke="#9E9E9E" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="390" y="272" font-size="8" fill="#BDBDBD" font-style="italic">fetch-images.sh (if external images)</text>
 
-  <!-- Arrow raw/ → scan + optional note -->
-  <line x1="380" y1="258" x2="380" y2="285" stroke="#9E9E9E" stroke-width="2" marker-end="url(#ah)"/>
-  <text x="390" y="276" font-size="8" fill="#BDBDBD" font-style="italic">fetch-images.sh (nếu có ảnh ngoài)</text>
+  <!-- ═══ ROW 4: compile ═══ -->
+  <rect x="230" y="282" width="300" height="46" rx="8" fill="#F1F8E9" stroke="#AED581" stroke-width="2"/>
+  <text x="380" y="302" text-anchor="middle" font-size="12" font-weight="700" fill="#1B5E20">scan /raw  ·  compile</text>
+  <text x="380" y="318" text-anchor="middle" font-size="9"  fill="#33691E">Claude Code — reads, summarizes, connects</text>
 
-  <!-- ═══ ROW 4: scan / compile ═══ -->
-  <rect x="230" y="287" width="300" height="46" rx="8" fill="#F1F8E9" stroke="#AED581" stroke-width="2"/>
-  <text x="380" y="307" text-anchor="middle" font-size="12" font-weight="700" fill="#1B5E20">scan /raw  ·  compile</text>
-  <text x="380" y="323" text-anchor="middle" font-size="9"  fill="#33691E">Claude Code — đọc, tóm tắt, kết nối</text>
+  <!-- Strategies Attached Box -->
+  <path d="M 240,328 L 520,328 L 520,370 L 240,370 Z" fill="#DCEDC8" stroke="#AED581" stroke-width="1.5" stroke-dasharray="2,2"/>
+  <text x="380" y="344" text-anchor="middle" font-size="10" font-weight="700" fill="#33691E">Document Processing Strategies</text>
+  <text x="380" y="358" text-anchor="middle" font-size="9" fill="#558B2F">Stuffing · Refine · Map-Reduce · Hierarchical Split</text>
 
-  <!-- Arrow scan → wiki -->
-  <line x1="380" y1="333" x2="380" y2="356" stroke="#9E9E9E" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="380" y1="370" x2="380" y2="394" stroke="#9E9E9E" stroke-width="2" marker-end="url(#ah)"/>
 
   <!-- ═══ ROW 5: wiki/ ═══ -->
-  <rect x="160" y="358" width="440" height="64" rx="8" fill="#E0F2F1" stroke="#26A69A" stroke-width="2"/>
-  <text x="380" y="379" text-anchor="middle" font-size="13" font-weight="700" fill="#004D40">📚  wiki/</text>
-  <text x="380" y="396" text-anchor="middle" font-size="9"  fill="#00695C">concepts/  ·  summaries/  ·  topics/  ·  domains/</text>
-  <text x="380" y="412" text-anchor="middle" font-size="9"  fill="#00695C">index.md  ·  _brief.md</text>
+  <rect x="160" y="396" width="440" height="64" rx="8" fill="#E0F2F1" stroke="#26A69A" stroke-width="2"/>
+  <text x="380" y="417" text-anchor="middle" font-size="13" font-weight="700" fill="#004D40">📚  wiki/</text>
+  <text x="380" y="434" text-anchor="middle" font-size="9"  fill="#00695C">concepts/  ·  summaries/  ·  topics/  ·  domains/</text>
+  <text x="380" y="450" text-anchor="middle" font-size="9"  fill="#00695C">index.md  ·  _brief.md</text>
 
-  <!-- Arrow wiki → outputs + command labels -->
-  <line x1="380" y1="422" x2="380" y2="445" stroke="#9E9E9E" stroke-width="2" marker-end="url(#ah)"/>
-  <text x="390" y="438" font-size="8" fill="#BDBDBD" font-style="italic">query:  ·  report:  ·  slides:  ·  chart:</text>
+  <!-- LINT/MAINTAIN LOOP -->
+  <path d="M 600,428 L 640,428 L 640,396 L 600,396" 
+        fill="none" stroke="#26A69A" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#ahG)"/>
+  <rect x="650" y="400" width="85" height="32" rx="4" fill="#E0F2F1" stroke="#00897B" stroke-width="1"/>
+  <text x="692" y="414" text-anchor="middle" font-size="9" font-weight="600" fill="#00695C">lint</text>
+  <text x="692" y="426" text-anchor="middle" font-size="8" fill="#00695C">web-impute</text>
+
+  <!-- Arrow wiki → outputs -->
+  <line x1="380" y1="460" x2="380" y2="488" stroke="#9E9E9E" stroke-width="2" marker-end="url(#ah)"/>
+  <text x="390" y="479" font-size="8" fill="#BDBDBD" font-style="italic">query:  ·  report:  ·  slides:  ·  chart:</text>
 
   <!-- ═══ ROW 6: outputs/ ═══ -->
-  <rect x="230" y="447" width="300" height="46" rx="8" fill="#EDE7F6" stroke="#9575CD" stroke-width="2"/>
-  <text x="380" y="467" text-anchor="middle" font-size="12" font-weight="700" fill="#311B92">📤  outputs/</text>
-  <text x="380" y="483" text-anchor="middle" font-size="9"  fill="#4527A0">reports/  ·  slides/  ·  notes/  ·  charts/</text>
+  <rect x="230" y="490" width="300" height="46" rx="8" fill="#EDE7F6" stroke="#9575CD" stroke-width="2"/>
+  <text x="380" y="510" text-anchor="middle" font-size="12" font-weight="700" fill="#311B92">📤  outputs/</text>
+  <text x="380" y="526" text-anchor="middle" font-size="9"  fill="#4527A0">reports/  ·  slides/  ·  notes/  ·  charts/</text>
 
   <!-- ═══ file-back feedback loop ═══ -->
-  <!-- Path: right edge of outputs (530,470) → right → up to wiki center (600,390) -->
-  <path d="M 530,470 L 718,470 L 718,390 L 600,390"
+  <path d="M 530,513 L 718,513 L 718,446 L 600,446"
         fill="none" stroke="#E65100" stroke-width="2.5" stroke-dasharray="7,4"
         marker-end="url(#ahO)"/>
-  <!-- Badge -->
-  <rect x="700" y="418" width="56" height="26" rx="5" fill="#E65100"/>
-  <text x="728" y="428" text-anchor="middle" font-size="8" font-weight="700" fill="white">file-back:</text>
-  <text x="728" y="440" text-anchor="middle" font-size="10" fill="white">↺</text>
+  <rect x="700" y="474" width="56" height="26" rx="5" fill="#E65100"/>
+  <text x="728" y="484" text-anchor="middle" font-size="8" font-weight="700" fill="white">file-back:</text>
+  <text x="728" y="496" text-anchor="middle" font-size="10" fill="white">↺</text>
 
-  <!-- ═══ Legend ═══ -->
-  <rect x="20" y="512" width="720" height="74" rx="8" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
-  <text x="36" y="529" font-size="10" font-weight="700" fill="#424242">Lệnh thường dùng</text>
+  <!-- ═══ Legend: COMMANDS ═══ -->
+  <rect x="20" y="555" width="720" height="150" rx="8" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="36" y="580" font-size="12" font-weight="700" fill="#424242">Common Commands (Workflow Order)</text>
 
-  <text x="36"  y="546" font-size="9" fill="#616161">fetch-repo: owner/repo</text>
-  <text x="200" y="546" font-size="9" fill="#616161">fetch-repo: url --docs</text>
-  <text x="370" y="546" font-size="9" fill="#616161">fetch-pdf: &lt;url&gt; &lt;tên-file&gt;</text>
-  <text x="540" y="546" font-size="9" fill="#616161">scan /raw  ·  compile &lt;file&gt;</text>
+  <!-- Col 1: Ingest -->
+  <text x="36" y="605" font-size="10" font-weight="700" fill="#0D47A1">1. Ingest (to raw/)</text>
+  <text x="36" y="623" font-size="9" fill="#424242">fetch-repo: owner/repo</text>
+  <text x="36" y="637" font-size="9" fill="#424242">fetch-repo: url --docs</text>
+  <text x="36" y="651" font-size="9" fill="#424242">fetch-pdf: &lt;url&gt; &lt;name&gt;</text>
+  <text x="36" y="665" font-size="9" fill="#424242">save-image.sh &lt;url&gt;</text>
 
-  <text x="36"  y="562" font-size="9" fill="#616161">query: [topic]</text>
-  <text x="200" y="562" font-size="9" fill="#616161">report: [topic]  ·  slides: [topic]</text>
-  <text x="400" y="562" font-size="9" fill="#E65100" font-weight="600">file-back: outputs/reports/foo.md</text>
+  <!-- Col 2: Process -->
+  <text x="210" y="605" font-size="10" font-weight="700" fill="#E65100">2. Process (to wiki/)</text>
+  <text x="210" y="623" font-size="9" font-weight="600" fill="#E65100">scan /raw</text>
+  <text x="210" y="637" font-size="9" fill="#424242">compile raw/.../foo.md</text>
+  <text x="210" y="651" font-size="9" fill="#424242">index / brief</text>
 
-  <text x="36" y="577" font-size="8" fill="#9E9E9E" font-style="italic">* Wiki cần ~50+ bài để Q&amp;A cho kết quả tốt. Mỗi output phải file-back để wiki compound theo thời gian.</text>
+  <!-- Col 3: Output -->
+  <text x="384" y="605" font-size="10" font-weight="700" fill="#311B92">3. Query &amp; Output</text>
+  <text x="384" y="623" font-size="9" fill="#424242">query: [question]</text>
+  <text x="384" y="637" font-size="9" fill="#424242">report: [topic]</text>
+  <text x="384" y="651" font-size="9" fill="#424242">slides: [topic]</text>
+  <text x="384" y="665" font-size="9" fill="#424242">chart: [type] [topic]</text>
+
+  <!-- Col 4: Maintain -->
+  <text x="560" y="605" font-size="10" font-weight="700" fill="#26A69A">4. Maintain &amp; Loop</text>
+  <text x="560" y="623" font-size="9" font-weight="600" fill="#E65100">file-back: outputs/.../foo.md</text>
+  <text x="560" y="637" font-size="9" fill="#424242">lint</text>
+  <text x="560" y="651" font-size="9" fill="#424242">web-impute: [topic]</text>
+  <text x="560" y="665" font-size="9" fill="#424242">python3 tools/serve.py</text>
+
+  <text x="36" y="693" font-size="8" fill="#9E9E9E" font-style="italic">* Wiki needs ~50+ sources for good Q&amp;A. Every output must be filed back so knowledge compounds.</text>
+
+  <!-- ═══ Legend: SETUP & PLUGINS ═══ -->
+  <rect x="20" y="715" width="720" height="110" rx="8" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="36" y="740" font-size="12" font-weight="700" fill="#1B5E20">🛠️ Obsidian Setup &amp; Plugins — Unlock the Full Power</text>
+
+  <!-- Col 1: Setup -->
+  <text x="36" y="765" font-size="10" font-weight="700" fill="#2E7D32">1. The Native Power</text>
+  <text x="36" y="783" font-size="9" fill="#1B5E20">• "Open folder as Vault" in Obsidian</text>
+  <text x="36" y="798" font-size="9" fill="#1B5E20">• Instantly activates Graph View &amp; Backlinks</text>
+  <text x="36" y="813" font-size="9" fill="#1B5E20">• Perfect for visually navigating node clusters</text>
+
+  <!-- Col 2: Ingest -->
+  <text x="250" y="765" font-size="10" font-weight="700" fill="#2E7D32">2. Obsidian Web Clipper</text>
+  <text x="250" y="783" font-size="9" fill="#1B5E20">• Add Extension to Chrome/Firefox/Edge</text>
+  <text x="250" y="798" font-size="9" fill="#1B5E20">• Highlight, clean, and clip the web cleanly</text>
+  <text x="250" y="813" font-size="9" fill="#1B5E20">• Saves directly into raw/articles/</text>
+
+  <!-- Col 3: Community Plugins -->
+  <text x="464" y="765" font-size="10" font-weight="700" fill="#2E7D32">3. Recommended Plugins</text>
+  
+  <rect x="464" y="774" width="50" height="14" rx="3" fill="#C8E6C9"/>
+  <text x="489" y="784" text-anchor="middle" font-size="8" font-weight="700" fill="#1B5E20">Dataview</text>
+  <text x="520" y="783" font-size="9" fill="#1B5E20">Live SQL-querying for components</text>
+  
+  <rect x="464" y="792" width="50" height="14" rx="3" fill="#C8E6C9"/>
+  <text x="489" y="802" text-anchor="middle" font-size="8" font-weight="700" fill="#1B5E20">Marp</text>
+  <text x="520" y="801" font-size="9" fill="#1B5E20">Render slide deck (outputs/slides) visually</text>
 
 </svg>

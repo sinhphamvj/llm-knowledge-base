@@ -27,7 +27,6 @@ updated: 2026-01-01
 <!-- BUILD_INDEX:CONCEPTS_START -->
 | File | Domain | Description |
 |------|--------|-------------|
-| _(none yet)_ | - | - |
 <!-- BUILD_INDEX:CONCEPTS_END -->
 
 ---
@@ -47,7 +46,6 @@ updated: 2026-01-01
 <!-- BUILD_INDEX:SUMMARIES_START -->
 | Source | File | Date |
 |--------|------|------|
-| _(none yet)_ | - | - |
 <!-- BUILD_INDEX:SUMMARIES_END -->
 
 ---
@@ -66,6 +64,6 @@ updated: 2026-01-01
 - Total concepts: 0
 - Total topics: 0
 - Total summaries: 0
-- Domains active: 0
-- Last updated: —
+- Domains active: 0/4
+- Last updated: 2026-04-05
 <!-- BUILD_INDEX:STATUS_END -->
