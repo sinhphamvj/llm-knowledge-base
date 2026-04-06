@@ -3,20 +3,20 @@ title: "Transformer Architecture"
 domain: ai
 tags: [architecture, attention, deep-learning, nlp]
 created: 2017-06-12
-updated: 2026-04-06
+updated: 2025-01-01
 source: "raw/papers/attention-is-all-you-need.pdf"
 confidence: high
 ---
 
 # Transformer Architecture
 
-Transformer là kiến trúc mạng nơ-ron xử lý chuỗi hoàn toàn thông qua **cơ chế attention**, không dùng recurrence (RNN) hay convolution. Ra đời năm 2017, nó trở thành nền tảng của mọi mô hình ngôn ngữ lớn hiện đại.
+The Transformer is a neural network architecture that processes sequences entirely through **attention mechanisms**, without any recurrence (RNN) or convolution. Introduced in 2017, it became the foundation of all modern large language models.
 
-## Tại sao quan trọng
+## Why it matters
 
-Trước Transformer, các mô hình chuỗi (LSTM, GRU) xử lý token từng cái một — chậm và khó giữ ngữ cảnh tầm xa. Transformer xử lý **toàn bộ chuỗi song song**, vừa huấn luyện nhanh hơn vừa nắm bắt tốt hơn các phụ thuộc tầm xa.
+Before Transformers, sequence models (LSTMs, GRUs) processed tokens one-by-one — slow, and struggled to retain context across long distances. Transformers process the **entire sequence in parallel**, making them both faster to train and better at long-range dependencies.
 
-## Các thành phần cốt lõi
+## Core components
 
 ```
 Input → Embedding + Positional Encoding
@@ -24,31 +24,31 @@ Input → Embedding + Positional Encoding
       → Output Projection
 ```
 
-- **Self-Attention**: mỗi token tính toán mức độ nên "chú ý" đến mọi token khác
-- **Multi-Head**: chạy attention H lần song song với các phép chiếu học được khác nhau → nắm bắt nhiều loại mối quan hệ cùng lúc
-- **Positional Encoding**: vì không có recurrence, thông tin vị trí được bổ sung qua tín hiệu sinusoidal cộng vào embedding
-- **FFN (Feed-Forward Network)**: hai lớp tuyến tính với ReLU, áp dụng độc lập cho từng token
+- **Self-Attention**: each token computes how much it should "attend to" every other token
+- **Multi-Head**: run attention H times in parallel with different learned projections → captures different relationship types simultaneously
+- **Positional Encoding**: since there's no recurrence, position info is injected via sinusoidal signals added to embeddings
+- **FFN (Feed-Forward Network)**: two linear layers with ReLU, applied per-token independently
 
-## Công thức Attention
+## Attention formula
 
 $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
 
-- Q (Query), K (Key), V (Value) — các phép chiếu của đầu vào
-- Chia cho $\sqrt{d_k}$ để tránh softmax bão hòa ở chiều cao
+- Q (Query), K (Key), V (Value) — projections of the input
+- Scaling by $\sqrt{d_k}$ prevents softmax saturation in high dimensions
 
-## Thông số chính (bài báo gốc)
+## Key numbers (original paper)
 
-| Cấu hình | d_model | Heads | Layers | FFN dim | Params |
-|----------|---------|-------|--------|---------|--------|
-| Base     | 512     | 8     | 6      | 2048    | 65M    |
-| Large    | 1024    | 16    | 6      | 4096    | 213M   |
+| Config | d_model | Heads | Layers | FFN dim | Params |
+|--------|---------|-------|--------|---------|--------|
+| Base   | 512     | 8     | 6      | 2048    | 65M    |
+| Large  | 1024    | 16    | 6      | 4096    | 213M   |
 
-## Tầm ảnh hưởng
+## Impact
 
-Mọi LLM lớn (GPT, BERT, T5, Claude, Gemini) đều là biến thể của Transformer. Kiến trúc đủ tổng quát để mở rộng ra ngoài NLP → thị giác (ViT), âm thanh, code, đa phương thức.
+Every major LLM (GPT, BERT, T5, Claude, Gemini) is a Transformer variant. The architecture proved general enough to extend beyond NLP → vision (ViT), audio, code, multimodal.
 
-## Xem thêm
+## See also
 
-- [[concepts/attention-mechanism]] — phép toán cốt lõi chi tiết
-- [[summaries/attention-is-all-you-need]] — tóm tắt bài báo nguồn
-- [[domains/ai]] — tổng quan domain AI
+- [[concepts/attention-mechanism]] — the core operation in detail
+- [[summaries/attention-is-all-you-need]] — source paper summary
+- [[domains/ai]] — AI domain overview
