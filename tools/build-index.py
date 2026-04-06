@@ -91,7 +91,74 @@ def main():
         if domain not in domain_concepts: domain_concepts[domain] = []
         domain_concepts[domain].append(c)
 
-    # 1. READ INDEX.MD
+    # 1. READ INDEX.MD (create from template if missing)
+    if not os.path.exists(INDEX_FILE):
+        today = datetime.now().strftime("%Y-%m-%d")
+        with open(INDEX_FILE, 'w', encoding='utf-8') as f:
+            f.write(f"""---
+title: "Knowledge Base Index"
+tags: [index, meta]
+created: {today}
+updated: {today}
+---
+
+# Knowledge Base — Index
+
+> Master index. Auto-updated after each compile run.
+> Read [[_brief]] for a quick context summary before querying.
+
+---
+
+## Domains
+
+<!-- BUILD_INDEX:DOMAINS_START -->
+| Domain | MOC | Description |
+|--------|-----|-------------|
+| _(empty — add content to populate)_ | - | - |
+<!-- BUILD_INDEX:DOMAINS_END -->
+
+---
+
+## Concepts
+
+<!-- BUILD_INDEX:CONCEPTS_START -->
+| File | Domain | Description |
+|------|--------|-------------|
+| _(empty — run scan /raw to populate)_ | - | - |
+<!-- BUILD_INDEX:CONCEPTS_END -->
+
+---
+
+## Topics
+
+<!-- BUILD_INDEX:TOPICS_START -->
+| File | Domain | Description |
+|------|--------|-------------|
+| _(none yet)_ | - | - |
+<!-- BUILD_INDEX:TOPICS_END -->
+
+---
+
+## Summaries
+
+<!-- BUILD_INDEX:SUMMARIES_START -->
+| Source | File | Date |
+|--------|------|------|
+<!-- BUILD_INDEX:SUMMARIES_END -->
+
+---
+
+## Status
+
+<!-- BUILD_INDEX:STATUS_START -->
+- Total concepts: 0
+- Total topics: 0
+- Total summaries: 0
+- Domains active: 0/4
+- Last updated: {today}
+<!-- BUILD_INDEX:STATUS_END -->
+""")
+        print("  ✨ Created wiki/index.md from template")
     with open(INDEX_FILE, 'r', encoding='utf-8') as f:
         index_text = f.read()
 
@@ -227,7 +294,46 @@ _(none yet)_
             
     print("Updated domain MOCs")
 
-    # 3. UPDATE _brief.md
+    # 3. UPDATE _brief.md (create from template if missing)
+    if not os.path.exists(BRIEF_FILE):
+        today = datetime.now().strftime("%Y-%m-%d")
+        with open(BRIEF_FILE, 'w', encoding='utf-8') as f:
+            f.write(f"""---
+title: "Wiki Brief — Quick Context"
+tags: [meta, index]
+created: {today}
+updated: {today}
+---
+
+# Wiki Brief
+
+> Read this before any Q&A query to get quick context on what the wiki covers.
+
+## What This Wiki Covers
+
+_Run `scan /raw` after adding content to populate this section._
+
+## Domains
+
+<!-- BUILD_INDEX:DOMAINS_START -->
+| Domain | MOC | Concepts | Summaries | Status |
+|--------|-----|----------|-----------|--------|
+<!-- BUILD_INDEX:DOMAINS_END -->
+
+## Recently Ingested
+
+<!-- BUILD_INDEX:INGEST_START -->
+<!-- BUILD_INDEX:INGEST_END -->
+
+## Key Concepts
+
+_Will be populated as content is added._
+
+## Core Insights Log
+
+_Key insights are appended here after each compile._
+""")
+        print("  ✨ Created wiki/_brief.md from template")
     with open(BRIEF_FILE, 'r', encoding='utf-8') as f:
         brief_text = f.read()
         
