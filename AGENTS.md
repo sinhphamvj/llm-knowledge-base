@@ -10,10 +10,12 @@ You are an AI knowledge engineer operating this knowledge base following Andrej 
 Every time you receive `scan /raw` or `compile <file>`, perform **only these 3 Cognitive steps**:
 
 ```
-[ ] 0. Convert (if needed): If the file is .pdf, .docx, .pptx, .xlsx → run ./tools/convert.sh "raw/..."
-[ ] 1. Read the raw file (Use the view_file tool. If external images are present: run ./tools/fetch-images.sh)
-[ ] 2. Core Cognitive: Create/update wiki/summaries/<name>.md and wiki/concepts/<name>.md (field `domain:` is required)
-[ ] 3. Finalize: Run ./tools/finalize-compile.sh "raw/..." "One bullet point — the single most novel key insight (if any)"
+[ ] 0. Style Check: If `.local-rules.md` exists in root, read it and follow its language & formatting rules for ALL output. Skip if absent.
+[ ] 1. Start Clock: Run `./tools/scan.sh --start "raw/..."` to track metrics.
+[ ] 2. Convert (if needed): If the file is .pdf, .docx, .pptx, .xlsx → run `./tools/convert.sh "raw/..."`
+[ ] 3. Read the raw file (Use the view_file tool. If external images are present: run `./tools/fetch-images.sh`)
+[ ] 4. Core Cognitive: Create/update wiki/summaries/<name>.md and wiki/concepts/<name>.md (field `domain:` is required)
+[ ] 5. Finalize: Run `./tools/finalize-compile.sh "raw/..." "One bullet point — the single most novel key insight (if any)" --model <your-model-id>`
 ```
 
 **The `finalize-compile.sh` script will automatically handle the rest:**
@@ -21,6 +23,10 @@ Every time you receive `scan /raw` or `compile <file>`, perform **only these 3 C
 - Extract frontmatter to update links into `wiki/domains/*.md`
 - Scan and regenerate `wiki/index.md` from scratch
 - Auto-update counts in `wiki/_brief.md` and attach your Core Insight.
+
+> **`--model` is required for cost tracking.** You (the AI agent) must pass your own model ID
+> (e.g. `claude-opus-4-6`, `gpt-5.4`, `gemini-2.5-pro`). No tool auto-exposes this to subprocesses.
+> Supported IDs: run `python3 tools/metrics.py --help` or see the PRICING dict in `tools/metrics.py`.
 
 ---
 
@@ -53,13 +59,17 @@ Every time you receive `scan /raw` or `compile <file>`, perform **only these 3 C
    The script will download images to `raw/images/` and rewrite URLs in the file to local paths — only then can Claude read and describe the actual images in the wiki.
    Quick check for external images: `grep -c 'https://' "raw/articles/file-name.md"`
 3. Read each file to be processed (`.md`, `.txt`, `.pdf`, images)
-4. Output format for `wiki/summaries/` (depends on strategy):
-   - **Stuffing**: 3–7 bullet point summary of key ideas.
-   - **Refine / Map-Reduce / Hierarchical Split**: No length limit. Must be written as a **Deep Analysis** broken down by section (Problem, Architecture, Training Regime, Findings...). Must compress all key parameters, logic, and core formulas. All important data must be preserved.
+4. Output format for `wiki/summaries/`:
+   - **All Strategies (Stuffing to Hierarchical)**: Must strictly follow the Universal Summary Structure. Explain *why* and *how*, do not just state *what*. 
+   - **Required sections**:
+     - `Executive Summary`: 1-2 paragraphs giving high-level context, problem, and main thesis.
+     - `Deep Analysis`: Logical breakdown of architecture/methodology (use sub-headings).
+     - `Key Insights`: 2-5 bullet points of the most novel/counter-intuitive findings.
+     - `Limitations & Open Questions` (Optional): Missing pieces or edge cases.
    - Every summary must end with: a list of **key concepts** and **relations (links)**.
 5. Create/update file in `/wiki/summaries/<name>.md`
 6. Create/update **concept files** in `/wiki/concepts/`
-   - **Concept Limit**: Extract a strict maximum of **3-5 core concepts** per document to prevent concept explosion. Minor terms should be explained inline within the summary instead of getting their own files.
+   - **Concept Limit**: Extract a strict maximum of **1-3 MACRO concepts** per document to prevent concept explosion. Minor terms and sub-concepts MUST NOT get their own files; they must be grouped under a parent Macro concept file.
    - **Required**: every concept file must have `domain:` in its frontmatter
    - Domain value: the name of the domain MOC file (e.g. `ai`, `product`, `technology`, `project`)
    - If the concept belongs to a new domain with no MOC yet: use a short slug name — `lint` will detect it later
@@ -185,7 +195,7 @@ wiki/
 **Concepts** (`/wiki/concepts/`):
 - Filename: lowercase, hyphen-separated (`transformer-architecture.md`)
 - Maximum ~150 lines — split if longer
-- Must include: definition, formula/example, see also links
+- Must include: Definition, Source Context (where/how it was mentioned in the source), Sub-concepts breakdown, Examples, and See also links
 
 **Summaries** (`/wiki/summaries/`):
 - Summary of one source document
