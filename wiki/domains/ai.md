@@ -12,7 +12,11 @@ updated: 2025-01-01
 ## Concepts
 
 <!-- BUILD_INDEX:CONCEPTS_START -->
+- [[concepts/jagged-intelligence]] — Jagged Intelligence
+- [[concepts/llm-app-layer]] — LLM App Layer
+- [[concepts/rlvr]] — RLVR — Reinforcement Learning from Verifiable Rewards
 - [[concepts/transformer-architecture]] — Transformer Architecture
+- [[concepts/vibe-coding]] — Vibe Coding
 <!-- BUILD_INDEX:CONCEPTS_END -->
 
 ## Topics

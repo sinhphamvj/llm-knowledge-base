@@ -27,6 +27,11 @@ updated: 2026-01-01
 <!-- BUILD_INDEX:CONCEPTS_START -->
 | File | Domain | Description |
 |------|--------|-------------|
+| [[concepts/jagged-intelligence]] | AI | Jagged Intelligence |
+| [[concepts/llm-app-layer]] | AI | LLM App Layer |
+| [[concepts/rlvr]] | AI | RLVR — Reinforcement Learning from Verifiable Rewards |
+| [[concepts/transformer-architecture]] | AI | Transformer Architecture |
+| [[concepts/vibe-coding]] | AI | Vibe Coding |
 <!-- BUILD_INDEX:CONCEPTS_END -->
 
 ---
@@ -46,6 +51,8 @@ updated: 2026-01-01
 <!-- BUILD_INDEX:SUMMARIES_START -->
 | Source | File | Date |
 |--------|------|------|
+| 2025 LLM Year in Review | [[summaries/2025-llm-year-in-review]] | 2026-04-05 |
+| Attention Is All You Need | [[summaries/attention-is-all-you-need]] | 2017-06-12 |
 <!-- BUILD_INDEX:SUMMARIES_END -->
 
 ---
@@ -61,9 +68,9 @@ updated: 2026-01-01
 ## Status
 
 <!-- BUILD_INDEX:STATUS_START -->
-- Total concepts: 0
+- Total concepts: 5
 - Total topics: 0
-- Total summaries: 0
-- Domains active: 0/4
+- Total summaries: 2
+- Domains active: 1/4
 - Last updated: 2026-04-05
 <!-- BUILD_INDEX:STATUS_END -->

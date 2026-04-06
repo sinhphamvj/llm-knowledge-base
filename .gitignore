@@ -49,3 +49,6 @@ outputs/charts/*
 
 # Local Claude Code config (contains machine-specific paths)
 .claude/
+
+# Local agent overrides
+.local-rules.md

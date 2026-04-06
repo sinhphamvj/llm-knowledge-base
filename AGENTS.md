@@ -26,10 +26,10 @@ Every time you receive `scan /raw` or `compile <file>`, perform **only these 3 C
 
 ## Language & Writing Style
 
-- **Write all wiki content in English**
+- **Default Language**: Write all wiki content, reports, notes, and slides in **English**.
+- **Local Overrides**: If a `.local-rules.md` file exists in the root directory, strictly follow its language and formatting rules instead (this allows users to localize their own AI without committing changes to the repo).
 - Keep technical keywords inline without paraphrasing: `the **attention** mechanism`, `the **Transformer** architecture`
 - Do not translate: model names, paper titles, framework names, mathematical notation
-- All outputs (reports, notes, slides) should also be in English
 
 ### Clarity requirements
 
@@ -241,7 +241,7 @@ After each major compile, update `wiki/_brief.md`:
 ## 6. Output Generation
 
 ### Reports → `/outputs/reports/report-<topic>-YYYY-MM-DD.md`
-- Plain Markdown, in English
+- Plain Markdown, in the language specified by `.local-rules.md` (default: English)
 - Include: executive summary, findings, connections, open questions
 - After creating: **suggest** which insights should be filed back into the wiki
 
