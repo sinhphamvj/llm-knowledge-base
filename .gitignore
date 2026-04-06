@@ -25,6 +25,10 @@ wiki/topics/*
 !wiki/concepts/.gitkeep
 !wiki/topics/.gitkeep
 
+# Auto-generated index files — personal data, recreated by build-index.py on first run
+wiki/index.md
+wiki/_brief.md
+
 # Personal domain MOCs (keep the template/about file and example)
 wiki/domains/*.md
 !wiki/domains/_about-domains.md
@@ -32,7 +36,6 @@ wiki/domains/*.md
 # Example files — included to demonstrate wiki format
 !wiki/concepts/transformer-architecture.md
 !wiki/summaries/attention-is-all-you-need.md
-!wiki/domains/ai.md
 
 # Personal outputs (keep folder structure and templates)
 outputs/reports/*
