@@ -55,3 +55,6 @@ outputs/charts/*
 
 # Local agent overrides
 .local-rules.md
+
+# Local-only tools (not ready for public release)
+tools/test.sh
