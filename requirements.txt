@@ -8,3 +8,6 @@ markitdown>=0.0.1
 # Used by tools/chart.py (generating visualizations)
 matplotlib>=3.9.0
 networkx>=3.0
+
+# Used by tools/metrics.py (token counting)
+tiktoken>=0.7.0

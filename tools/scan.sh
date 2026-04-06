@@ -8,6 +8,7 @@
 #   ./tools/scan.sh --log        # view scan log
 #   ./tools/scan.sh --mark <file> [--note "text"]  # mark file as compiled
 #   ./tools/scan.sh --info <file> # check file length + suggest compile strategy
+#   ./tools/scan.sh --start <file> # start the timer for processing
 
 set -euo pipefail
 
@@ -29,6 +30,22 @@ _all_raw() {
 }
 
 case "${1:-}" in
+
+  --start)
+    target="${2:-}"
+    if [[ -z "$target" ]]; then
+      echo "Usage: $0 --start <relative-path>"
+      exit 1
+    fi
+    full="$ROOT/$target"
+    if [[ ! -f "$full" ]]; then
+      echo "File does not exist: $full"
+      exit 1
+    fi
+    h=$(_hash "$full")
+    echo "$(date +%s)" > "/tmp/.scan_start_$h"
+    echo "⏱️  Timer started for $target"
+    ;;
 
   --new)
     echo "=== FILES NOT YET COMPILED ==="
@@ -67,21 +84,23 @@ case "${1:-}" in
 
   --status)
     echo "=== SCAN STATUS ==="
-    printf "%-55s %-12s %-22s\n" "File" "Status" "Compiled at"
-    printf "%-55s %-12s %-22s\n" "----" "------" "-----------"
+    printf "%-55s %-12s %-16s %-7s\n" "File" "Status" "Compiled at" "Cost($)"
+    printf "%-55s %-12s %-16s %-7s\n" "----" "------" "-----------" "-------"
     while IFS= read -r f; do
       rel="${f#$ROOT/}"
       current_hash=$(_hash "$f")
       logged=$(grep "^$rel|" "$LOG" 2>/dev/null | tail -1 || true)
       if [[ -z "$logged" ]]; then
-        printf "%-55s %-12s %-22s\n" "$rel" "⚪ NEW" "-"
+        printf "%-55s %-12s %-16s %-7s\n" "$rel" "⚪ NEW" "-" "-"
       else
         logged_hash=$(echo "$logged" | cut -d'|' -f2)
         logged_date=$(echo "$logged" | cut -d'|' -f3)
+        f_count=$(echo "$logged" | awk -F'|' '{print NF}')
+        cost=$( [[ $f_count -ge 7 ]] && echo "$logged" | cut -d'|' -f7 || echo "-" )
         if [[ "$current_hash" != "$logged_hash" ]]; then
-          printf "%-55s %-12s %-22s\n" "$rel" "🟡 MODIFIED" "$logged_date"
+          printf "%-55s %-12s %-16s %-7s\n" "$rel" "🟡 MODIFIED" "${logged_date:0:10}" "-"
         else
-          printf "%-55s %-12s %-22s\n" "$rel" "✅ DONE" "$logged_date"
+          printf "%-55s %-12s %-16s %-7s\n" "$rel" "✅ DONE" "${logged_date:0:10}" "${cost:0:6}"
         fi
       fi
     done < <(_all_raw)
@@ -103,11 +122,19 @@ case "${1:-}" in
     if [[ ! -s "$LOG" ]]; then
       echo "  (empty — no files compiled yet)"
     else
-      printf "%-55s %-12s %-22s\n" "File" "Hash" "Date"
-      printf "%-55s %-12s %-22s\n" "----" "----" "----"
-      while IFS='|' read -r file hash date rest; do
-        printf "%-55s %-12s %-22s\n" "$file" "${hash:0:8}..." "$date"
+      printf "%-55s %-12s %-17s %-6s %-7s\n" "File" "Hash" "Date" "Time" "Cost($)"
+      printf "%-55s %-12s %-17s %-6s %-7s\n" "----" "----" "----" "----" "-------"
+      while IFS='|' read -r file hash date time in_t out_t cost note; do
+        if [[ -z "$time" ]] || [[ "$time" == *[a-zA-Z]* && "$time" != "N/A" ]]; then
+          printf "%-55s %-12s %-17s %-6s %-7s\n" "$file" "${hash:0:8}..." "$date" "-" "-"
+        else
+          printf "%-55s %-12s %-17s %-6s %-7s\n" "$file" "${hash:0:8}..." "$date" "${time}s" "${cost:0:6}"
+        fi
       done < "$LOG"
+      
+      echo ""
+      total_cost=$(awk -F'|' '{sum+=$7} END{printf "%.4f", sum}' "$LOG" 2>/dev/null || echo "0")
+      echo "Total Estimated Cost: \$$total_cost"
     fi
     ;;
 
@@ -121,12 +148,14 @@ case "${1:-}" in
       echo "Example: $0 --mark 'raw/papers/big.pdf' --note 'part 1/3 done'"
       exit 1
     fi
-    # Parse optional --note
+    # Parse optional --note and --model
     note=""
+    model_flag=""
     shift 2 2>/dev/null || true
     while [[ $# -gt 0 ]]; do
       case "$1" in
         --note) note="$2"; shift 2 ;;
+        --model) model_flag="$2"; shift 2 ;;
         *) shift ;;
       esac
     done
@@ -137,11 +166,38 @@ case "${1:-}" in
     fi
     h=$(_hash "$full")
     ts=$(date '+%Y-%m-%d %H:%M')
-    echo "${target}|${h}|${ts}|${note}" >> "$LOG"
+    
+    time_taken="-"
+    if [[ -f "/tmp/.scan_start_$h" ]]; then
+      start_ts=$(cat "/tmp/.scan_start_$h")
+      end_ts=$(date +%s)
+      time_taken=$((end_ts - start_ts))
+      rm -f "/tmp/.scan_start_$h"
+    fi
+    
+    in_tokens="0"; out_tokens="0"; cost="0"; density="0"; model="-"
+    if [[ -x "$ROOT/tools/metrics.py" ]]; then
+      model_arg=""
+      [[ -n "$model_flag" ]] && model_arg="--model $model_flag"
+      m_out=$("$ROOT/tools/metrics.py" "$full" $model_arg 2>/dev/null || true)
+      if [[ -n "$m_out" ]] && [[ "$m_out" == "{"* ]]; then
+        in_tokens=$(echo "$m_out" | grep -o '"in_tokens": [0-9]*' | awk '{print $2}' || echo "0")
+        out_tokens=$(echo "$m_out" | grep -o '"out_tokens": [0-9]*' | awk '{print $2}' || echo "0")
+        cost=$(echo "$m_out" | grep -o '"cost": [0-9.]*' | awk '{print $2}' || echo "0")
+        density=$(echo "$m_out" | grep -o '"density": [0-9.]*' | awk '{print $2}' || echo "0")
+        model=$(echo "$m_out" | awk -F'"model": "' '{print $2}' | awk -F'"' '{print $1}' || echo "-")
+      fi
+    fi
+    
+    echo "${target}|${h}|${ts}|${time_taken}|${in_tokens}|${out_tokens}|${cost}|${note}" >> "$LOG"
+    
+    msg="✅ Marked: $target (time: ${time_taken}s, cost: \$$cost [$model])"
     if [[ -n "$note" ]]; then
-      echo "✅ Marked: $target (hash: ${h:0:8}..., time: $ts, note: $note)"
-    else
-      echo "✅ Marked: $target (hash: ${h:0:8}..., time: $ts)"
+       msg+=" - Note: $note"
+    fi
+    echo "$msg"
+    if [[ "$density" != "0" ]]; then
+       echo "📊 Knowledge Density: $density (Out: $out_tokens / In: $in_tokens)"
     fi
     ;;
 
