@@ -12,7 +12,8 @@ Every time you receive `scan /raw` or `compile <file>`, perform **only these 3 C
 ```
 [ ] 0. Style Check: If `.local-rules.md` exists in root, read it and follow its language & formatting rules for ALL output. Skip if absent.
 [ ] 1. Start Clock: Run `./tools/scan.sh --start "raw/..."` to track metrics.
-[ ] 2. Convert (if needed): If the file is .pdf, .docx, .pptx, .xlsx → run `./tools/convert.sh "raw/..."`
+[ ] 2. Convert (if needed): If the file is .pdf, .docx, .pptx, .xlsx, .html, .jpg, .png, .csv → run `./tools/convert.sh "raw/..."`
+     Uses IBM Docling backend with OCR support for scanned PDFs and images.
 [ ] 3. Read the raw file (Use the view_file tool. If external images are present: run `./tools/fetch-images.sh`)
 [ ] 4. Core Cognitive: Create/update wiki/summaries/<name>.md and wiki/concepts/<name>.md (field `domain:` is required)
 [ ] 5. Finalize: Run `./tools/finalize-compile.sh "raw/..." "One bullet point — the single most novel key insight (if any)" --model <your-model-id>`
@@ -32,7 +33,7 @@ Every time you receive `scan /raw` or `compile <file>`, perform **only these 3 C
 
 ## Language & Writing Style
 
-- **Default Language**: Write all wiki content, reports, notes, and slides in **English**.
+- **Default Language**: Write all wiki content, reports, notes, and slides in **Vietnamese**.
 - **Local Overrides**: If a `.local-rules.md` file exists in the root directory, strictly follow its language and formatting rules instead (this allows users to localize their own AI without committing changes to the repo).
 - Keep technical keywords inline without paraphrasing: `the **attention** mechanism`, `the **Transformer** architecture`
 - Do not translate: model names, paper titles, framework names, mathematical notation
@@ -82,6 +83,10 @@ Every time you receive `scan /raw` or `compile <file>`, perform **only these 3 C
   - **HIGH VALUE** (diagrams, flowcharts, architectures, data charts): Describe its content in detail and embed using `![name](../../raw/images/name.png)`.
   - **LOW VALUE** (banners, avatars, decorative stock photos): Ignore completely. Do not describe and do not embed.
 
+> **Note**: Docling automatically extracts embedded images from PDFs and saves them to `raw/images/`.
+> The conversion script handles this — no manual `fetch-images.sh` needed for PDF-internal images.
+> `fetch-images.sh` is still needed for external image URLs in `.md` files.
+
 ### Handling long documents
 
 Before compiling, run `./tools/scan.sh --info <file>` to check the length. Choose the appropriate strategy:
@@ -94,7 +99,7 @@ Before compiling, run `./tools/scan.sh --info <file>` to check the length. Choos
 | Any `.md` / `.txt` file | 4,000 – 10,000 words | **Refine** |
 | Any `.md` / `.txt` file | 10,000 – 25,000 words | **Map-Reduce** |
 | Any `.md` / `.txt` file | > 25,000 words | **Hierarchical Split** |
-| `.pdf`, `.docx`, `.pptx`, `.xlsx` | Any length | **Convert first** → then apply the table above |
+| `.pdf`, `.docx`, `.pptx`, `.xlsx`, `.html`, `.jpg`, `.png`, `.csv` | Any length | **Convert first** → then apply the table above |
 
 ---
 
