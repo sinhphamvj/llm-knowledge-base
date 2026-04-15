@@ -66,9 +66,9 @@ This paper didn't just improve translation — it eliminated an entire class of 
 ## Key Concepts
 
 - [[concepts/transformer-architecture]] — full architecture breakdown
-- [[concepts/attention-mechanism]] — the core operation
+- [[concepts/transformer-architecture]] — self-attention mechanism chi tiết
 
 ## Relations
 
 - Led to: BERT, GPT series, T5, ViT (vision), Whisper (audio)
-- Domain MOC: [[domains/ai]]
+- Domain: ai

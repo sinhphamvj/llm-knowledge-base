@@ -1,54 +1,76 @@
 ---
 title: "Transformer Architecture"
 domain: ai
-tags: [architecture, attention, deep-learning, nlp]
-created: 2017-06-12
-updated: 2025-01-01
-source: "raw/papers/attention-is-all-you-need.pdf"
-confidence: high
+tags: [transformer, attention, neural-network, deep-learning, nlp]
+created: 2026-04-10
+updated: 2026-04-10
+source: "web search 2026-04-10"
+confidence: medium
 ---
 
 # Transformer Architecture
 
-The Transformer is a neural network architecture that processes sequences entirely through **attention mechanisms**, without any recurrence (RNN) or convolution. Introduced in 2017, it became the foundation of all modern large language models.
+> Kiến trúc neural network dựa trên self-attention, cách mạng hóa NLP và trở thành nền tảng cho LLMs hiện đại.
 
-## Why it matters
+## Định nghĩa
 
-Before Transformers, sequence models (LSTMs, GRUs) processed tokens one-by-one — slow, and struggled to retain context across long distances. Transformers process the **entire sequence in parallel**, making them both faster to train and better at long-range dependencies.
+**Transformer** là kiến trúc neural network được giới thiệu trong paper *"Attention Is All You Need"* (Vaswani et al., 2017). Thay thế hoàn toàn recurrent/convolutional layers bằng **self-attention mechanism**, cho phép xử lý song song toàn bộ sequence.
 
-## Core components
+Tại sao quan trọng: Transformer là nền tảng của GPT, BERT, và mọi LLM hiện đại. Nó giải quyết được bài toán long-range dependencies mà RNN/LSTM gặp khó khăn.
+
+## Core Components
+
+### 1. Self-Attention
+Mỗi token tạo ra 3 vector: **Query** (tìm gì?), **Key** (chứa gì?), **Value** (cung cấp thông tin gì?).
 
 ```
-Input → Embedding + Positional Encoding
-      → N × [Multi-Head Self-Attention → Add & Norm → FFN → Add & Norm]
-      → Output Projection
+Attention(Q, K, V) = softmax(QKᵀ / √dₖ) · V
 ```
 
-- **Self-Attention**: each token computes how much it should "attend to" every other token
-- **Multi-Head**: run attention H times in parallel with different learned projections → captures different relationship types simultaneously
-- **Positional Encoding**: since there's no recurrence, position info is injected via sinusoidal signals added to embeddings
-- **FFN (Feed-Forward Network)**: two linear layers with ReLU, applied per-token independently
+- `√dₖ` scaling: prevent softmax gradient quá nhỏ khi dₖ lớn
+- Mỗi token attend đến **tất cả** tokens khác → O(1) path length cho long-range dependencies
 
-## Attention formula
+### 2. Multi-Head Attention
+- Chạy nhiều attention heads song song, mỗi head học **loại quan hệ khác nhau**
+- Output concatenate + linear projection
+- Cho phép model jointly attend information từ nhiều representation subspaces
 
-$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+### 3. Encoder-Decoder Structure
+- **Encoder**: Self-attention + Feed-Forward Network (FFN) + Residual + LayerNorm
+- **Decoder**: Masked self-attention (không nhìn future tokens) + Cross-attention (nhìn encoder output) + FFN
 
-- Q (Query), K (Key), V (Value) — projections of the input
-- Scaling by $\sqrt{d_k}$ prevents softmax saturation in high dimensions
+### 4. Positional Encoding
+- Transformer không có recurrence → cần encode position tường minh
+- Sinusoidal functions hoặc learned embeddings
 
-## Key numbers (original paper)
+## 3 Variants chính
 
-| Config | d_model | Heads | Layers | FFN dim | Params |
-|--------|---------|-------|--------|---------|--------|
-| Base   | 512     | 8     | 6      | 2048    | 65M    |
-| Large  | 1024    | 16    | 6      | 4096    | 213M   |
+| Variant | Ví dụ | Phù hợp cho |
+|---------|-------|-------------|
+| **Encoder-only** | BERT | Understanding tasks (classification, NER) |
+| **Decoder-only** | GPT | Generation tasks (text, code) |
+| **Encoder-Decoder** | T5, BART | Seq2seq tasks (translation, summarization) |
 
-## Impact
+## Ưu điểm so với RNN/LSTM
 
-Every major LLM (GPT, BERT, T5, Claude, Gemini) is a Transformer variant. The architecture proved general enough to extend beyond NLP → vision (ViT), audio, code, multimodal.
+- **Parallelization**: tất cả positions tính song song → training nhanh hơn nhiều
+- **Long-range dependencies**: O(1) path length thay vì O(n) như RNN
+- **Scalability**: enable models từ hàng trăm triệu → hàng nghìn tỷ parameters
+
+## Trade-offs
+
+| Ưu điểm | Hạn chế |
+|---------|---------|
+| Song song hóa tốt | O(n²) attention → tốn memory cho long sequences |
+| Scalable | Cần nhiều data và compute để train |
+| Flexible architecture | Positional encoding không hoàn hảo |
 
 ## See also
 
-- [[concepts/attention-mechanism]] — the core operation in detail
-- [[summaries/attention-is-all-you-need]] — source paper summary
-- [[domains/ai]] — AI domain overview
+- [[mlops-iqa-pipeline]] — Pipeline training có thể dùng Transformer backbone
+- [[mlflow]] — Track Transformer model experiments
+- [[pytorch]] — Framework phổ biến nhất để implement Transformer
+
+---
+
+*Imputed via web search — 2026-04-10*

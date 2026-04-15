@@ -67,7 +67,7 @@ updated: YYYY-MM-DD
 
 ## Source Summaries
 
-- [[summaries/article-slug]] — <source>, <author> <year>
+- [[summaries/<article-slug>]] — <source>, <author> <year>
 
 ## Concept Seeds
 
