@@ -9,8 +9,12 @@ from datetime import datetime
 
 try:
     from docling.document_converter import DocumentConverter
+    from docling.datamodel.pipeline_options import PdfPipelineOptions
+    from docling.document_converter import PdfFormatOption
 except ImportError:
     DocumentConverter = None
+    PdfPipelineOptions = None
+    PdfFormatOption = None
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 RAW_DIR = os.path.join(ROOT, 'raw')
@@ -120,7 +124,13 @@ def process_file(filepath, dry_run=False, keep=False, no_ocr=False):
         return True
 
     try:
-        converter = DocumentConverter()
+        if no_ocr and PdfPipelineOptions is not None:
+            pipeline_opts = PdfPipelineOptions(do_ocr=False)
+            converter = DocumentConverter(
+                format_options={".pdf": PdfFormatOption(pipeline_options=pipeline_opts)}
+            )
+        else:
+            converter = DocumentConverter()
         result = converter.convert(filepath)
 
         # Export to markdown
