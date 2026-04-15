@@ -4,7 +4,6 @@ import os
 import sys
 import shutil
 import argparse
-import re
 from datetime import datetime
 
 try:
@@ -62,37 +61,95 @@ def move_to_archive(filepath):
     return dest_path
 
 
-def _extract_embedded_images(content, source_filename):
-    """Extract base64-encoded images from docling markdown output to raw/images/."""
-    import base64
+def _extract_pictures(doc, source_filename, pdf_path=None):
+    """Extract pictures from Docling document to raw/images/.
 
+    Strategy: Docling provides bounding boxes for pictures but get_image()
+    often returns None. We use PyMuPDF (fitz) to crop images directly
+    from the PDF using those bounding boxes.
+    """
     ensure_dir(IMAGES_DIR)
+    slug = os.path.splitext(source_filename)[0].replace(' ', '-')
+    replacements = []
 
-    # Match ![alt](data:image/png;base64,...) patterns
-    pattern = r'!\[([^\]]*)\]\(data:image/([^;]+);base64,([^)]+)\)'
-    counter = 0
+    if not doc.pictures:
+        return replacements
 
-    def replace_match(match):
-        nonlocal counter
-        counter += 1
-        alt_text = match.group(1) or "image"
-        img_format = match.group(2)  # png, jpeg, etc.
-        b64_data = match.group(3)
-
-        slug = os.path.splitext(source_filename)[0].replace(' ', '-')
-        img_filename = f"{slug}-img-{counter}.{img_format}"
-        img_path = os.path.join(IMAGES_DIR, img_filename)
-
+    # Try PyMuPDF-based extraction for PDFs
+    if pdf_path and pdf_path.lower().endswith('.pdf'):
         try:
-            img_bytes = base64.b64decode(b64_data)
-            with open(img_path, 'wb') as f:
-                f.write(img_bytes)
-            # Relative path from the .md file location to raw/images/
-            return f'![{alt_text}](../../raw/images/{img_filename})'
-        except Exception:
-            return match.group(0)  # Keep original if extraction fails
+            import fitz
+            pdf = fitz.open(pdf_path)
+            for i, pic in enumerate(doc.pictures):
+                if not pic.prov:
+                    continue
+                try:
+                    prov = pic.prov[0]
+                    page_no = prov.page_no - 1  # Docling is 1-indexed, fitz is 0-indexed
+                    if page_no < 0 or page_no >= len(pdf):
+                        continue
+                    bbox = prov.bbox
+                    page = pdf[page_no]
+                    page_height = page.rect.height
+                    # Convert BOTTOMLEFT to TOPLEFT coordinates
+                    rect = fitz.Rect(bbox.l, page_height - bbox.t, bbox.r, page_height - bbox.b)
+                    clip = rect & page.rect
+                    if clip.is_empty or clip.width < 10 or clip.height < 10:
+                        continue
+                    pix = page.get_pixmap(clip=clip, matrix=fitz.Matrix(3, 3))
+                    img_filename = f"{slug}-img-{i}.png"
+                    img_path = os.path.join(IMAGES_DIR, img_filename)
+                    pix.save(img_path)
+                    rel_path = f"../../raw/images/{img_filename}"
+                    replacements.append((i, rel_path))
+                    print(f"   🖼️  Extracted: {img_filename} ({pix.width}x{pix.height})")
+                except Exception as e:
+                    print(f"   ⚠️  Picture {i}: {e}")
+            pdf.close()
+            return replacements
+        except ImportError:
+            pass  # fitz not available, fall through
 
-    return re.sub(pattern, replace_match, content)
+    # Fallback: try Docling's get_image()
+    for i, pic in enumerate(doc.pictures):
+        try:
+            img = pic.get_image(doc)
+            if img is None:
+                continue
+            img_filename = f"{slug}-img-{i}.png"
+            img_path = os.path.join(IMAGES_DIR, img_filename)
+            img.save(img_path)
+            rel_path = f"../../raw/images/{img_filename}"
+            replacements.append((i, rel_path))
+            print(f"   🖼️  Extracted: {img_filename} ({img.size[0]}x{img.size[1]})")
+        except Exception as e:
+            print(f"   ⚠️  Picture {i}: {e}")
+
+    return replacements
+
+
+def _inject_images_into_markdown(content, replacements):
+    """Replace <!-- image --> placeholders with actual image links.
+
+    Docling outputs '<!-- image -->' for each picture. We replace them
+    in order with the extracted image paths.
+    """
+    if not replacements:
+        return content
+
+    placeholder = "<!-- image -->"
+    parts = content.split(placeholder)
+    result = parts[0]
+    for idx, part in enumerate(parts[1:], 1):
+        # Find matching replacement by index (1-based since split gives parts after each placeholder)
+        rep = next((r for r in replacements if r[0] == idx - 1), None)
+        if rep:
+            result += f"![image]({rep[1]})"
+        else:
+            result += placeholder
+        result += part
+
+    return result
 
 
 def process_file(filepath, dry_run=False, keep=False, no_ocr=False):
@@ -124,8 +181,11 @@ def process_file(filepath, dry_run=False, keep=False, no_ocr=False):
         return True
 
     try:
-        if no_ocr and PdfPipelineOptions is not None:
-            pipeline_opts = PdfPipelineOptions(do_ocr=False)
+        # For PDFs: configure pipeline options
+        if ext == 'pdf' and PdfPipelineOptions is not None:
+            pipeline_opts = PdfPipelineOptions(
+                do_ocr=not no_ocr,
+            )
             converter = DocumentConverter(
                 format_options={".pdf": PdfFormatOption(pipeline_options=pipeline_opts)}
             )
@@ -133,12 +193,13 @@ def process_file(filepath, dry_run=False, keep=False, no_ocr=False):
             converter = DocumentConverter()
         result = converter.convert(filepath)
 
-        # Export to markdown
-        content = result.document.export_to_markdown()
+        doc = result.document
+        content = doc.export_to_markdown()
 
-        # Handle extracted images from PDFs
-        # Docling embeds images as base64 in markdown; extract them to raw/images/
-        content = _extract_embedded_images(content, filename)
+        # Extract pictures from document and inject into markdown
+        replacements = _extract_pictures(doc, filename, pdf_path=filepath)
+        if replacements:
+            content = _inject_images_into_markdown(content, replacements)
 
         # Add metadata header
         date_str = datetime.now().strftime("%Y-%m-%d")
