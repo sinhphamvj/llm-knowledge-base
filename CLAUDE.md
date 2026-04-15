@@ -44,10 +44,11 @@ index / brief                     # Rebuild index.md / _brief.md
 ./tools/scan.sh --info raw/papers/paper.pdf  # length, strategy
 ./tools/scan.sh --mark "raw/articles/foo.md" # mark as compiled
 
-# Convert
-./tools/convert.sh                           # auto-convert all PDF/DOCX/PPTX/XLSX in raw/
+# Convert (Docling backend: PDF, Office, HTML, Images, CSV)
+./tools/convert.sh                           # auto-convert all supported formats in raw/
 ./tools/convert.sh raw/papers/foo.pdf        # convert a specific file
 ./tools/convert.sh --dry-run                 # preview, no conversion
+./tools/convert.sh --no-ocr                  # convert without OCR (faster)
 
 # Compile automation & verification
 ./tools/finalize-compile.sh <file> "insight" # Auto mark + rebuild index
