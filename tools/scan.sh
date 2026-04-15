@@ -25,7 +25,11 @@ _hash() {
 }
 
 _all_raw() {
-  find "$RAW" -type f \( -name "*.md" -o -name "*.txt" -o -name "*.pdf" -o -name "*.docx" -o -name "*.pptx" -o -name "*.xlsx" \) \
+  find "$RAW" -type f \( -name "*.md" -o -name "*.txt" -o -name "*.pdf" \
+    -o -name "*.docx" -o -name "*.pptx" -o -name "*.xlsx" \
+    -o -name "*.html" -o -name "*.htm" \
+    -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.tif" -o -name "*.tiff" -o -name "*.webp" \
+    -o -name "*.csv" \) \
     -not -path "*/archived/*" -not -name ".gitkeep" | sort
 }
 
@@ -57,7 +61,7 @@ case "${1:-}" in
       logged=$(grep "^$rel|" "$LOG" 2>/dev/null | tail -1 || true)
       if [[ -z "$logged" ]]; then
         echo "  [NEW]      $rel"
-        if [[ "$rel" =~ \.(pdf|docx|pptx|xlsx)$ ]]; then
+        if [[ "$rel" =~ \.(pdf|docx|pptx|xlsx|html|htm|jpg|jpeg|png|tif|tiff|webp|csv)$ ]]; then
           echo "             ⚠️  File not yet converted — run ./tools/convert.sh first"
         fi
         ((count++)) || true
@@ -65,7 +69,7 @@ case "${1:-}" in
         logged_hash=$(echo "$logged" | cut -d'|' -f2)
         if [[ "$current_hash" != "$logged_hash" ]]; then
           echo "  [MODIFIED] $rel"
-          if [[ "$rel" =~ \.(pdf|docx|pptx|xlsx)$ ]]; then
+          if [[ "$rel" =~ \.(pdf|docx|pptx|xlsx|html|htm|jpg|jpeg|png|tif|tiff|webp|csv)$ ]]; then
             echo "             ⚠️  File not yet converted — run ./tools/convert.sh first"
           fi
           ((count++)) || true
@@ -242,8 +246,23 @@ case "${1:-}" in
     echo ""
 
     case "$ext_lower" in
-      pdf|docx|pptx|xlsx)
+      pdf|docx|dotx|docm|pptx|potx|ppsx|xlsx|xlsm)
         echo "Type       : $ext_lower (Binary/Office Format)"
+        echo "Strategy   : ⚠️ CONVERT FIRST (run: ./tools/convert.sh)"
+        echo "  → After converting to .md, use AI to read using the Text/Markdown file thresholds."
+        ;;
+    html|htm)
+        echo "Type       : $ext_lower (HTML)"
+        echo "Strategy   : ⚠️ CONVERT FIRST (run: ./tools/convert.sh)"
+        echo "  → After converting to .md, use AI to read using the Text/Markdown file thresholds."
+        ;;
+    jpg|jpeg|png|tif|tiff|webp)
+        echo "Type       : $ext_lower (Image — will run OCR)"
+        echo "Strategy   : ⚠️ CONVERT FIRST (run: ./tools/convert.sh)"
+        echo "  → After converting to .md, use AI to read using the Text/Markdown file thresholds."
+        ;;
+    csv)
+        echo "Type       : $ext_lower (CSV)"
         echo "Strategy   : ⚠️ CONVERT FIRST (run: ./tools/convert.sh)"
         echo "  → After converting to .md, use AI to read using the Text/Markdown file thresholds."
         ;;
